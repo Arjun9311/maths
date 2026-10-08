@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, ArrowLeft, CheckCircle2, Compass, Sparkles } from 'lucide-react';
+import { X, ArrowRight, ArrowLeft, CheckCircle2, Compass } from 'lucide-react';
 import { GUIDED_TOUR_STEPS } from '../data/constants';
 
 export default function GuidedTour({ isOpen, onClose }) {

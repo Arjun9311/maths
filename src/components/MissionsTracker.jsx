@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, CheckCircle2, Award, Sparkles } from 'lucide-react';
+import { Target, CheckCircle2, Award } from 'lucide-react';
 import { LEARNING_MISSIONS } from '../data/constants';
 
 export default function MissionsTracker({ completedMissions = [] }) {

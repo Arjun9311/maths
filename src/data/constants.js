@@ -432,122 +432,158 @@ export const PRESENTATION_SLIDES = [
   {
     id: 1,
     slideNumber: "01",
-    title: "What is the Problem?",
-    subtitle: "We cannot easily study every single member of a large population.",
+    title: "Defining the Research Problem",
+    subtitle: "We cannot easily survey every single member of a large population.",
     points: [
-      "A complete census takes immense time, financial cost, and logistical effort.",
-      "In many cases (e.g. testing product lifespans), studying everything destroys the items.",
-      "The Goal: Find a scientific method to learn about the whole without testing the whole."
+      "A complete census requires immense time, taxpayer funds, and logistical effort.",
+      "In many physical and social settings, testing or polling every unit is impractical.",
+      "The Core Objective: Develop a scientific methodology to learn about the entire population from a smaller representative sample."
     ],
-    takeaway: "Studying everyone is impractical. We need a reliable proxy."
+    takeaway: "Exhaustive surveys are impractical. We need a rigorous, mathematically valid proxy."
   },
   {
     id: 2,
     slideNumber: "02",
-    title: "What is a Population?",
-    subtitle: "The complete collection of observations we wish to understand.",
+    title: "Synthetic Population Architecture",
+    subtitle: "Modeling a ground truth universe with categorical and continuous variables.",
     points: [
-      "Denoted by capital N (in our project, N = 10,000 simulated voters).",
-      "Summary values describing populations are called Parameters (e.g. true proportion P).",
-      "Parameters are typically fixed but unknown in real-world scenarios."
+      "The universe contains N = 10,000 simulated voters with categorical preferences (Option A: 48%, Option B: 32%, Option C: 20%).",
+      "Each voter has a continuous demographic attribute: Voter Age generated from a normal distribution (mean μ = 42.5, σ = 14.2).",
+      "Interactive 10,000-dot visual canvas allows students to visually inspect the distribution before any sample is drawn."
     ],
-    takeaway: "The population is the 'big picture' containing the unknown truth."
+    takeaway: "Known population parameters (P, μ) serve as the benchmark to evaluate sample accuracy."
   },
   {
     id: 3,
     slideNumber: "03",
-    title: "What is a Sample?",
-    subtitle: "A carefully selected, representative subset of the population.",
+    title: "Survey Sampling Protocols",
+    subtitle: "Three fundamental random selection methodologies to draw n = 500 voters.",
     points: [
-      "Denoted by lowercase n (in our project, n = 500 voters).",
-      "Because n << N, data collection is fast, affordable, and practical.",
-      "A sample is only useful if it accurately mirrors the underlying population."
+      "Simple Random Sampling (SRS): Every voter in the population has an equal probability P = n/N = 5% of selection.",
+      "Systematic Sampling: Pick a random starting index r ∈ [0, k-1], then select every k-th voter (k = N / n = 20).",
+      "Stratified Sampling: Partition the population into strata (preference groups) and sample proportionally to eliminate group imbalance."
     ],
-    takeaway: "A small sample acts as a lens into the large population."
+    takeaway: "Randomization eliminates investigator bias and provides the basis for probability theory."
   },
   {
     id: 4,
     slideNumber: "04",
-    title: "How Does Sampling Work?",
-    subtitle: "Randomization eliminates selection bias and guarantees mathematical validity.",
+    title: "Comparative Sampling Analysis & Trade-offs",
+    subtitle: "Evaluating SRS vs. Systematic vs. Stratified under identical sample sizes.",
     points: [
-      "Simple Random Sampling (SRS): Every member has an identical probability of selection.",
-      "Systematic Sampling: Pick a random starting point, then select every k-th item.",
-      "Stratified Sampling: Divide population into subgroups and sample proportionally from each."
+      "SRS provides theoretical purity, but random chance may under-sample small minority demographic groups.",
+      "Systematic sampling ensures uniform dispersion across lists, but is vulnerable to periodic data patterns.",
+      "Stratified sampling guarantees proportional representation of all voter blocs, substantially reducing between-group variance."
     ],
-    takeaway: "Good sampling design prevents biased, misleading results."
+    takeaway: "Stratified sampling reduces estimation error by ensuring no subgroup is excluded."
   },
   {
     id: 5,
     slideNumber: "05",
-    title: "What is a Statistic?",
-    subtitle: "A numerical summary computed directly from the sample data.",
+    title: "Point Estimation & Finite Population Correction",
+    subtitle: "Computing observable statistics to estimate unknown parameters.",
     points: [
-      "Examples: sample proportion (p̂), sample mean (x̄), sample standard deviation (s).",
-      "Unlike population parameters, sample statistics are fully observable.",
-      "Because samples vary, different samples produce slightly different statistics."
+      "Sample proportion p̂ = x / n serves as our unbiased point estimate for population parameter P.",
+      "Finite Population Correction (FPC = √((N - n) / (N - 1))) accounts for reduced uncertainty when sampling without replacement.",
+      "The Limitation: While p̂ = 48.2% is unbiased, another sample may yield 47.5%. A single number hides variability."
     ],
-    takeaway: "A statistic is a number calculated strictly from our sample."
+    takeaway: "A point estimate provides one best-guess value, but requires interval bounds to convey uncertainty."
   },
   {
     id: 6,
     slideNumber: "06",
-    title: "What is Estimation?",
-    subtitle: "Using known sample statistics to make inferences about unknown population parameters.",
+    title: "Confidence Intervals & Coverage Reliability",
+    subtitle: "Quantifying estimation uncertainty through Wald and Wilson score intervals.",
     points: [
-      "Point Estimation: Offering one single number (e.g. p̂ = 48.2%) as our best guess for P.",
-      "It is simple and concise, but hides sampling uncertainty.",
-      "We know the estimate is close, but rarely exactly equal to the parameter."
+      "Formulated as: Estimate ± Margin of Error (e.g. 48.2% ± 3.8% → [44.4%, 52.0%] at 95% confidence).",
+      "Wilson Score Interval avoids Wald probability boundary violations (<0 or >1) for extreme proportions or small samples.",
+      "Coverage Simulator proves empirically that across 100 repeated surveys, ~95 intervals successfully bracket the true parameter."
     ],
-    takeaway: "Point estimation gives one best-guess number."
+    takeaway: "95% confidence reflects the reliability of the estimation procedure over repeated sampling."
   },
   {
     id: 7,
     slideNumber: "07",
-    title: "What is a Confidence Interval?",
-    subtitle: "Quantifying uncertainty by providing a plausible range around the estimate.",
+    title: "Pedagogical Architecture & Dual View Modes",
+    subtitle: "Designing an accessible interface for both novice learners and advanced statisticians.",
     points: [
-      "Formula: Estimate ± Margin of Error (e.g. 48.2% ± 3.8% → [44.4%, 52.0%]).",
-      "95% Confidence: Over many repeated samples, 95% of intervals will contain the true parameter.",
-      "Increasing sample size n narrows the interval, giving greater precision."
+      "Beginner Mode (Real-Life): Replaces Greek formulas with intuitive analogies (tasting a pot of soup, medical blood tests).",
+      "Technical Mode (Academic): Exposes complete statistical notation (E[p̂], SE, df, z_crit, ANOVA formulas).",
+      "Interactive glossary and built-in presentation deck allow immediate classroom and oral exam preparation."
     ],
-    takeaway: "A confidence interval provides a range that communicates uncertainty."
+    takeaway: "Dual view modes bridge the gap between intuitive concept comprehension and mathematical rigor."
   },
   {
     id: 8,
     slideNumber: "08",
-    title: "What is a Sampling Distribution?",
-    subtitle: "The probability distribution of a statistic across repeated independent samples.",
+    title: "Active Learning, Gamified Missions & Viva Deck",
+    subtitle: "Engaging students through guided goals, real-time feedback, and oral exam prep.",
     points: [
-      "If we draw 100, 500, or 1000 different samples of size n, each gives an estimate.",
-      "Plotting all estimates creates a histogram: the Sampling Distribution.",
-      "The center equals the true parameter, and the spread is the Standard Error (SE)."
+      "Missions Tracker provides 4 progressive milestones (drawing samples, shrinking error, repeated sampling, confidence widths).",
+      "Live 'What Just Happened?' panel translates every slider and button action into plain-English statistical outcomes.",
+      "Integrated Viva Deck equips students with 10-second, 30-second, and 1-minute spoken pitches for oral examinations."
     ],
-    takeaway: "The sampling distribution reveals the long-run behavior of our estimator."
+    takeaway: "Interactive feedback loops and structured missions turn abstract formulas into hands-on discoveries."
   },
   {
     id: 9,
     slideNumber: "09",
-    title: "What Does the Central Limit Theorem Show?",
-    subtitle: "Averages from large random samples form a normal bell curve.",
+    title: "Empirical Sampling Distributions",
+    subtitle: "Observing long-run estimator behavior across M = 100, 500, or 1000 repeated draws.",
     points: [
-      "Even if the original population is not bell-shaped, sample means/proportions are normal for n ≥ 30.",
-      "Standard error shrinks at the rate of 1/√n as sample size increases.",
-      "This theorem allows us to calculate exact probabilities and confidence intervals."
+      "While a real pollster draws only one sample, our simulator automates hundreds of independent sample extractions.",
+      "Plotting all resulting p̂ estimates produces an empirical histogram clustered symmetrically around the true parameter P.",
+      "The spread of estimates is the Standard Error (SE), which shrinks predictably proportional to 1 / √n."
     ],
-    takeaway: "CLT provides the mathematical foundation for modern inferential statistics."
+    takeaway: "The sampling distribution proves that random sample estimates converge predictably on the truth."
   },
   {
     id: 10,
     slideNumber: "10",
-    title: "Final Takeaway",
-    subtitle: "Sampling and estimation allow us to make confident decisions under uncertainty.",
+    title: "The Central Limit Theorem (CLT)",
+    subtitle: "The mathematical backbone connecting sample data to predictable normal curves.",
     points: [
-      "Population (N) → Sample (n) → Statistic (p̂) → Estimate (p̂ ≈ P) → Confidence Interval.",
-      "Repeated sampling proves the reliability of our single sample.",
-      "Statistical inference turns uncertain sample data into rigorous scientific insight."
+      "Even when underlying voter choices are discrete categories (Yes/No), sample averages form a smooth bell curve for n ≥ 30.",
+      "As sample size increases, variance shrinks and the empirical curve perfectly mirrors Gaussian N(P, σ²/n).",
+      "This theorem provides theoretical justification for using standard normal critical z-values in opinion polling."
     ],
-    takeaway: "We learned about 10,000 voters by studying only 500—with measurable precision!"
+    takeaway: "CLT guarantees that sample averages behave predictably regardless of the underlying population shape."
+  },
+  {
+    id: 11,
+    slideNumber: "11",
+    title: "Inferential Lab: Student's t and Chi-Square Tests",
+    subtitle: "Extending inference to continuous demographics and categorical goodness-of-fit.",
+    points: [
+      "Student's t-Distribution: Used for Voter Age when population variance σ² is unknown (df = n - 1), featuring heavier tails.",
+      "Interactive df slider (df = 1...60) displays the visual transition from heavy tails to the standard normal curve.",
+      "Chi-Square Goodness-of-Fit (χ²): Evaluates whether observed categorical vote counts deviate significantly from expected shares."
+    ],
+    takeaway: "Classical distributions provide rigorous test statistics for unknown variance and categorical fit."
+  },
+  {
+    id: 12,
+    slideNumber: "12",
+    title: "F-Distribution & One-Way ANOVA",
+    subtitle: "Testing variance ratios and demographic differences across multiple groups.",
+    points: [
+      "One-Way ANOVA tests whether voter age varies significantly across the three preference groups (Option A, B, and C).",
+      "F-Ratio: Computed as Between-Group Mean Square divided by Within-Group Mean Square (df₁ = 2, df₂ = n - 3).",
+      "Interactive F-curve highlights critical rejection regions and calculates exact p-values for hypothesis testing."
+    ],
+    takeaway: "The F-distribution enables simultaneous multi-group comparison without inflating Type I error."
+  },
+  {
+    id: 13,
+    slideNumber: "13",
+    title: "Full Statistical Discovery Pipeline",
+    subtitle: "From 10,000 citizens to scientific polling conclusions.",
+    points: [
+      "Pipeline: Population (N) → Sampling (n) → Point Estimate (p̂) → Confidence Interval → CLT & Inferential Testing.",
+      "By polling just 500 voters, we achieved ±3.5% margin of error on a 10,000-voter electorate.",
+      "Client-side numerical algorithms (Acklam inverse normal, continued fractions for Beta/Gamma) power live scientific calculations."
+    ],
+    takeaway: "Statistical inference turns incomplete sample data into confident, scientifically rigorous decisions."
   }
 ];
 

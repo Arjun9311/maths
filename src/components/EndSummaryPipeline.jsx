@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, CheckCircle2, Award, Sparkles, Compass, BookOpen } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Award, Sparkles } from 'lucide-react';
 
 export default function EndSummaryPipeline({
   populationSize,

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Sparkles, ArrowRight, CheckCircle2, RotateCcw, Compass, HelpCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Compass, Sparkles } from 'lucide-react';
 import { COLOR_PALETTE } from '../data/constants';
 
-export default function EducationalIntro({ onStartTutorial, onSkipToSimulator, onGenerateLiveSample }) {
+export default function EducationalIntro({ onStartTutorial, onSkipToSimulator }) {
   const [activeStoryStep, setActiveStoryStep] = useState(0);
   const [isPlayingAuto, setIsPlayingAuto] = useState(true);
   const canvasRef = useRef(null);

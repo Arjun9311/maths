@@ -238,12 +238,13 @@ export function simulateSamplingDistribution(population, sampleSize, numSamples 
   const meanProportion = calculateMean(proportions);
   const empiricalSE = calculateSampleStdDev(proportions);
 
-  // True population proportion for reference
   const truePopCount = population.filter(v => v.choice === targetOption).length;
-  const trueProportion = truePopCount / population.length;
-  const theoreticalSE = Math.sqrt((trueProportion * (1 - trueProportion)) / sampleSize);
+  const N = population.length || 1;
+  const trueProportion = truePopCount / N;
+  const fpc = (N > sampleSize && N > 1) ? Math.sqrt((N - sampleSize) / (N - 1)) : 1;
+  const theoreticalSE = Math.sqrt((trueProportion * (1 - trueProportion)) / sampleSize) * fpc;
 
-  // Group into 20 histogram bins
+  // Group into histogram bins
   const minVal = Math.min(...proportions);
   const maxVal = Math.max(...proportions);
   const binCount = 18;
@@ -256,13 +257,16 @@ export function simulateSamplingDistribution(population, sampleSize, numSamples 
     const low = startBin + i * binWidth;
     const high = low + binWidth;
     const center = (low + high) / 2;
+    const label = `${(center * 100).toFixed(1)}%`;
     bins.push({
       binIndex: i,
-      rangeLabel: `${(center * 100).toFixed(1)}%`,
+      rangeLabel: label,
+      range: label,
       center: center,
       low: low,
       high: high,
-      frequency: 0
+      frequency: 0,
+      count: 0
     });
   }
 
@@ -271,13 +275,19 @@ export function simulateSamplingDistribution(population, sampleSize, numSamples 
     for (let i = 0; i < bins.length; i++) {
       if (p >= bins[i].low && (p < bins[i].high || i === bins.length - 1)) {
         bins[i].frequency++;
+        bins[i].count++;
         assigned = true;
         break;
       }
     }
     if (!assigned && bins.length > 0) {
-      if (p < bins[0].low) bins[0].frequency++;
-      else bins[bins.length - 1].frequency++;
+      if (p < bins[0].low) {
+        bins[0].frequency++;
+        bins[0].count++;
+      } else {
+        bins[bins.length - 1].frequency++;
+        bins[bins.length - 1].count++;
+      }
     }
   });
 
@@ -285,10 +295,13 @@ export function simulateSamplingDistribution(population, sampleSize, numSamples 
     numSamples,
     sampleSize,
     proportions,
+    sampleProportions: proportions,
     meanProportion,
+    empiricalMean: meanProportion,
     empiricalSE,
     theoreticalSE,
     trueProportion,
-    histogramData: bins
+    histogramData: bins,
+    bins: bins
   };
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Layers, RotateCcw, Sparkles, Sliders, CheckCircle2, TrendingDown } from 'lucide-react';
+import { Play, Layers, RotateCcw, Sliders, TrendingDown } from 'lucide-react';
 import TooltipIcon from './TooltipIcon';
 import { SAMPLE_SIZE_PRESETS, STATISTICAL_GLOSSARY } from '../data/constants';
 

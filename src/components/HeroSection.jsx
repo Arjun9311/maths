@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Sparkles, ArrowRight, Play, Eye } from 'lucide-react';
+import { Sparkles, Play, Eye } from 'lucide-react';
 
 export default function HeroSection({ onStartSimulation, onExploreCLT }) {
   const canvasRef = useRef(null);

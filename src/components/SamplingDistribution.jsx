@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts';
-import { Layers, Play, RefreshCw, TrendingUp, Sparkles, ArrowRight, GraduationCap, HelpCircle, Mic, CheckCircle2 } from 'lucide-react';
+import { Layers, RefreshCw, GraduationCap, HelpCircle, Mic, CheckCircle2 } from 'lucide-react';
 import TooltipIcon from './TooltipIcon';
 import { simulateSamplingDistribution } from '../utils/sampling';
 import { REPEATED_SAMPLES_PRESETS, STATISTICAL_GLOSSARY } from '../data/constants';
@@ -30,8 +30,9 @@ export default function SamplingDistribution({
       const res = simulateSamplingDistribution(population, sampleSize, numSamples, targetOption);
       setDistResult(res);
 
-      if (res && res.sampleProportions) {
-        const preview = res.sampleProportions.slice(0, 5).map((p, idx) => ({
+      const props = res ? (res.sampleProportions || res.proportions || []) : [];
+      if (props.length > 0) {
+        const preview = props.slice(0, 5).map((p, idx) => ({
           sampleId: idx + 1,
           pct: (p * 100).toFixed(1)
         }));
@@ -47,6 +48,12 @@ export default function SamplingDistribution({
   }, [population, sampleSize, numSamples, targetOption]);
 
   const trueP = targetOption === 'Option A' ? popPercentages.pctA : targetOption === 'Option B' ? popPercentages.pctB : popPercentages.pctC;
+
+  const bins = distResult ? (distResult.bins || distResult.histogramData || []) : [];
+  const trueFrac = trueP / 100;
+  const closestBin = bins.length > 0
+    ? bins.reduce((prev, curr) => (!prev || Math.abs(curr.center - trueFrac) < Math.abs(prev.center - trueFrac) ? curr : prev), null)
+    : null;
 
   return (
     <div id="sampling-dist-section" className="card">
@@ -231,7 +238,7 @@ export default function SamplingDistribution({
             <div className="kpi-card" style={{ padding: '0.85rem' }}>
               <span className="kpi-label">Mean of All Estimates (E[p̂])</span>
               <div className="kpi-value text-mono" style={{ color: 'var(--blue-primary)', fontSize: '1.35rem' }}>
-                {(distResult.empiricalMean * 100).toFixed(1)}%
+                {(((distResult.empiricalMean ?? distResult.meanProportion ?? 0)) * 100).toFixed(2)}%
               </div>
               <span className="text-xs text-muted">True Parameter: {trueP}%</span>
             </div>
@@ -239,7 +246,7 @@ export default function SamplingDistribution({
             <div className="kpi-card" style={{ padding: '0.85rem' }}>
               <span className="kpi-label">Empirical Standard Error (SE)</span>
               <div className="kpi-value text-mono" style={{ color: 'var(--purple-accent)', fontSize: '1.35rem' }}>
-                {(distResult.empiricalSE * 100).toFixed(2)}%
+                {((distResult.empiricalSE ?? 0) * 100).toFixed(2)}%
               </div>
               <span className="text-xs text-muted">Observed spread across samples</span>
             </div>
@@ -247,32 +254,41 @@ export default function SamplingDistribution({
             <div className="kpi-card" style={{ padding: '0.85rem' }}>
               <span className="kpi-label">Theoretical Formula SE</span>
               <div className="kpi-value text-mono" style={{ color: 'var(--emerald-accent)', fontSize: '1.35rem' }}>
-                {(distResult.theoreticalSE * 100).toFixed(2)}%
+                {((distResult.theoreticalSE ?? 0) * 100).toFixed(2)}%
               </div>
               <span className="text-xs text-muted">√(P(1-P)/n) × FPC</span>
             </div>
           </div>
 
           {/* Recharts Bar Chart Histogram */}
-          <div style={{ width: '100%', height: 260 }}>
-            <ResponsiveContainer>
-              <BarChart data={distResult.bins} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <div style={{ width: '100%', height: 260, minHeight: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={bins} margin={{ top: 15, right: 15, left: -15, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-light)" />
-                <XAxis dataKey="range" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
+                <XAxis dataKey="range" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} interval={1} />
                 <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
                 <Tooltip
                   content={({ payload }) => {
                     if (!payload || !payload.length) return null;
                     const data = payload[0].payload;
+                    const count = data.count ?? data.frequency ?? 0;
+                    const pct = numSamples > 0 ? ((count / numSamples) * 100).toFixed(1) : '0';
                     return (
                       <div className="tooltip-card">
-                        <div style={{ fontWeight: 700 }}>Proportion Range: {data.range}</div>
-                        <div>Frequency: {data.count} samples ({(data.frequency * 100).toFixed(1)}%)</div>
+                        <div style={{ fontWeight: 700 }}>Proportion: {data.range || data.rangeLabel}</div>
+                        <div>Frequency: {count} samples ({pct}%)</div>
                       </div>
                     );
                   }}
                 />
-                <ReferenceLine x={`${trueP}%`} stroke="var(--rose-accent)" strokeDasharray="4 4" label={{ value: `True P (${trueP}%)`, fill: 'var(--rose-accent)', fontSize: 11 }} />
+                {closestBin && (
+                  <ReferenceLine
+                    x={closestBin.range || closestBin.rangeLabel}
+                    stroke="var(--rose-accent)"
+                    strokeDasharray="4 4"
+                    label={{ value: `True P (${trueP}%)`, fill: 'var(--rose-accent)', fontSize: 11, position: 'top' }}
+                  />
+                )}
                 <Bar dataKey="count" fill="var(--purple-accent)" radius={[4, 4, 0, 0]} opacity={0.85} />
               </BarChart>
             </ResponsiveContainer>

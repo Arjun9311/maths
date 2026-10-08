@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ChevronRight, ChevronLeft, BookOpen, X } from 'lucide-react';
+import { ChevronRight, ChevronLeft, BookOpen, X } from 'lucide-react';
 
 export default function LearningModeStepper({
   currentStep,

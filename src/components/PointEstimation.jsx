@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Target, HelpCircle, ChevronDown, ChevronUp, ArrowRight, Mic, GraduationCap, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Target, HelpCircle, ArrowRight, Mic, GraduationCap, CheckCircle2, AlertCircle } from 'lucide-react';
 import TooltipIcon from './TooltipIcon';
 import { COLOR_PALETTE, STATISTICAL_GLOSSARY } from '../data/constants';
 
@@ -7,7 +7,6 @@ export default function PointEstimation({
   populationSize,
   sampleResults,
   popPercentages,
-  viewMode,
   onOpenTeachMe,
   onOpenWhy,
   onOpenHowToExplain
